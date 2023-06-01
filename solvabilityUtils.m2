@@ -2,7 +2,7 @@
 ------------------------------------------------------
 --------------   GROBNER BASIS solver  ---------------
 ------------------------------------------------------
-solveI = (I,R,inQQ) -> (
+solveI = (I,R,inQQ) -> ( -- note: per line 415, the ambient field is Q. 
 
 J:={};
 -- compute Grobner basis
@@ -12,8 +12,8 @@ else (
 time J = groebnerBasis(I, Strategy=>"F4"); -- assumes working in a prime field
 );
 J = sub(J,R); -- fix case J=|1| to get J = |1_R|
-forceGB J; 
-I = ideal J;
+forceGB J; -- declare that the columns of a matrix are a Gröbner basis
+I = ideal J; 
 
 dm:={}; dg:={}; -- initialize variables
 time dm = dim I;
@@ -25,7 +25,7 @@ time IG:=gens gb I;
 -- prepare output
 O:=new MutableList from {};
 O#0=(dm,dg);
-O#1=IG;
+O#1=IG; -- Line 23, IG is the Groebner basis gen by I.
 O
 
 )
@@ -508,8 +508,8 @@ nc:=O#3;
 oo:=solveI(I,R,inQQ);
 
 if verbose then (
-dm:=oo#0#0;
-dg:=oo#0#1;
+dm:=oo#0#0; -- extract dm from o#0 in solve(,,). This should read "return the first element of the tuple oo#0, where oo#0is (dm,dg)"
+dg:=oo#0#1; -- extract dg from o#0 in solve(,,). This should read "return the second element of the tuple oo#0, where oo#0 is (dm,dg)"
 print("After saturation:");
 print("Degree = "); print(dg); -- degree
 print("Dimension = "); print(dm); -- dimension
